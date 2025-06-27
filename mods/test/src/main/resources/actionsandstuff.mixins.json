@@ -1,0 +1,13 @@
+{
+	"required": true,
+	"package": "net.yumi.actionsandstuff.mixin",
+	"compatibilityLevel": "JAVA_17",
+	"mixins": [
+		"ExampleMixin",
+		"HandRenderer"
+
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

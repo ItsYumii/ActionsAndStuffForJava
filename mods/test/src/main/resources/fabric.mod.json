@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "actionsandstuff",
+	"version": "${version}",
+	"name": "Actions&Stuff For Java",
+	"description": ":3",
+	"authors": [
+		"Yumi"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "MIT",
+	"icon": "assets/actionsandstuff/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.yumi.actionsandstuff.ActionsStuffForJava"
+		],
+		"client": [
+			"net.yumi.actionsandstuff.ActionsStuffForJavaClient"
+		],
+		"fabric-datagen": [
+			"net.yumi.actionsandstuff.ActionsStuffForJavaDataGenerator"
+		]
+	},
+	"mixins": [
+		"actionsandstuff.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.14",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
