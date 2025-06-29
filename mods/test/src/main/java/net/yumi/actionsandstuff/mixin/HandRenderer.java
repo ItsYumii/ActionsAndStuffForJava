@@ -38,15 +38,16 @@ import java.util.*;
 public class HandRenderer {
 
 //    private double constStand = -0.0784000015258789;
-    private final double[] settingsRot = {0, 0, 0};
-    private final double[] settingsMove = {0, 0, 0};
+    private final double[] settingsRot = {-22, -6, 24};
+    private final double[] settingsMove = {0.08687434, 0.25517953, -0.27650119};
 
     private final float[] rotOffset = {0, 0, 0};
     private final float[] moveOffset = {0, 0, 0};
 
     private ItemStack mainItem = ItemStack.EMPTY;
 
-    public boolean wasPlayerOnGround = true;
+    private boolean wasPlayerOnGround = true;
+    private boolean wasAttacking = false;
 
     private final float[] idle = {0, 0, 0};
     float fallingOffsetGoal = 0.0F;
@@ -81,10 +82,10 @@ public class HandRenderer {
 
 //        System.out.printf("%.20f%n", deltaTime);
 
-        float side = (hand == Hand.MAIN_HAND) ?  1.0F : -1.0F;
-        float mainHand = player.getMainArm() == Arm.RIGHT ?  1.0F : -1.0F;
         boolean isMainHand = (hand == Hand.MAIN_HAND);
         boolean isMainHandRight = (player.getMainArm() == Arm.RIGHT);
+        float side = isMainHand ?  1.0F : -1.0F;
+        float mainHand = isMainHandRight ?  1.0F : -1.0F;
 
         PlayerEntityRenderer renderer = (PlayerEntityRenderer) MinecraftClient.getInstance().getEntityRenderDispatcher().getRenderer(player);
 
@@ -98,16 +99,16 @@ public class HandRenderer {
 
         matrices.scale(0.95f, 0.95f, 0.95f);
         if (mainItem.isIn(PLACEABLE_BLOCKS)) {
-//            matrices.translate((0.22F + settingsMove[0] + moveOffset[0]) * side * mainHand, (-0.84F + settingsMove[1] + moveOffset[1] + 0.3F * fallingOffset), (-0.09F + settingsMove[2] + moveOffset[2] - 0.08 * fallingOffset));
-//            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((-86f + (int) settingsRot[0] + rotOffset[0] + 10 * fallingOffset)));
-//            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((-1f + (int) settingsRot[2] + rotOffset[2] + 2 * fallingOffset) * side * mainHand));
-//            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((180f + (int) settingsRot[1] + rotOffset[1]) * side * mainHand));
-            matrices.translate((0.22F + moveOffset[0]) * side * mainHand,
-                               -0.84F + moveOffset[1] + idle[1] + 0.3F * fallingOffset,
-                               -0.09F + moveOffset[2] - 0.08F * fallingOffset);
-            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((-86F + rotOffset[0] + 10F * fallingOffset)));
-            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((-1F - idle[2] + rotOffset[2] + 2F * fallingOffset) * side * mainHand));
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((180F + rotOffset[1]) * side * mainHand));
+            matrices.translate((0.22F + settingsMove[0] + moveOffset[0]) * side * mainHand, (-0.84F + settingsMove[1] + moveOffset[1] + 0.3F * fallingOffset), (-0.09F + settingsMove[2] + moveOffset[2] - 0.08 * fallingOffset));
+            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((-86f + (int) settingsRot[0] + rotOffset[0] + 10 * fallingOffset)));
+            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((-1f + (int) settingsRot[2] + rotOffset[2] + 2 * fallingOffset) * side * mainHand));
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((180f + (int) settingsRot[1] + rotOffset[1]) * side * mainHand));
+//            matrices.translate((0.22F + moveOffset[0]) * side * mainHand,
+//                               -0.84F + moveOffset[1] + idle[1] + 0.3F * fallingOffset,
+//                               -0.09F + moveOffset[2] - 0.08F * fallingOffset);
+//            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((-86F + rotOffset[0] + 10F * fallingOffset)));
+//            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((-1F - idle[2] + rotOffset[2] + 2F * fallingOffset) * side * mainHand));
+//            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((180F + rotOffset[1]) * side * mainHand));
         } else {
 //            matrices.translate((0.38F + settingsMove[0] + moveOffset[0]) * side * mainHand, (-1.20F + settingsMove[1] + moveOffset[1] + 0.3F * fallingOffset), (-0.82F + settingsMove[2] + moveOffset[2]));
 //            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees((-57f + (int) settingsRot[0] + rotOffset[0])));
@@ -140,11 +141,11 @@ public class HandRenderer {
 //        matrices.translate((-0.34F + settingsMove[0]) * side * mainHand, 0.72F + settingsMove[1], -0.26F + settingsMove[2]);
 //        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-91F + (int) settingsRot[0]));
 //        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((0F + (int) settingsRot[2]) * side * mainHand));
-//        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((-20F + (int) settingsRot[1]) * side * mainHand));
+//        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((160F + (int) settingsRot[1]) * side * mainHand));
         matrices.translate(-0.34F * side * mainHand, 0.72F, -0.26F);
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-91F));
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(0F * side * mainHand));
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-20F * side * mainHand));
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(160F * side * mainHand));
 
         ItemRenderer itemRenderer = client.getItemRenderer();
 
@@ -191,8 +192,9 @@ public class HandRenderer {
         }
 
         if (deltaSum > 1) {
-            System.out.println("Rot X: " + (int) settingsRot[0] + ", Rot Z: " + (int) settingsRot[2] + ", Rot Y: " + (int) settingsRot[1]);
-            System.out.println("Move X: " + String.format("%.2f", settingsMove[0]) + ", Move Y: " + String.format("%.2f", settingsMove[1]) + ", Move Y: " + String.format("%.2f", settingsMove[2]));
+//            System.out.println("Rot X: " + (int) settingsRot[0] + ", Rot Z: " + (int) settingsRot[2] + ", Rot Y: " + (int) settingsRot[1]);
+//            System.out.println("Move X: " + String.format("%.2f", settingsMove[0]) + ", Move Y: " + String.format("%.2f", settingsMove[1]) + ", Move Y: " + String.format("%.2f", settingsMove[2]));
+            System.out.println("\"rotation\": [" + (int) settingsRot[0] + "," + (int) settingsRot[1] + "," + (int) settingsRot[2] + "], \"position\": [" + String.format("%.8f", settingsMove[0]) + "," + String.format("%.8f", settingsMove[1]) + "," + String.format("%.8f", settingsMove[2]) + "]");
             deltaSum -= 1;
         }
     }
@@ -257,11 +259,12 @@ public class HandRenderer {
     }
 
     public void queueAnimations(AbstractClientPlayerEntity player, float equipProgress, float side, float mainHand) {
-        if (mainItem.isEmpty() && equipProgress > 0 && equipProgress < 0.2) {queueAnimation("punch", false);}
-        if (player.isOnGround() && !wasPlayerOnGround) {queueAnimation("land", false);fallingOffsetGoal = 0;}
+        if (mainItem.isEmpty() && client.options.attackKey.isPressed() && !wasAttacking) {queueAnimation("punch", false);}
+        if (player.isOnGround() && !wasPlayerOnGround) {queueAnimation("land", false); fallingOffsetGoal = 0;}
 
         queueAnimation("falling", true);
         wasPlayerOnGround = player.isOnGround();
+        wasAttacking = client.options.attackKey.isPressed();;
     }
 
     public void queueAnimation(String id, boolean loop) {
@@ -283,11 +286,8 @@ public class HandRenderer {
     }
 
     private void updateHeldItemsss() {
-        ItemStack item = ItemStack.EMPTY;
         ClientPlayerEntity clientPlayerEntity = this.client.player;
         assert clientPlayerEntity != null;
-        item = clientPlayerEntity.getMainHandStack();
-
-        mainItem = item;
+        mainItem = clientPlayerEntity.getMainHandStack();
     }
 }
